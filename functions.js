@@ -3,44 +3,18 @@
 
     Managing a Classroom
 
-    You just got hired by a school to create the API for their classes.
+    You just got hired by a school to create some functions for their classes.
 
-    They have already defined the objects for you, here are the create functions
-    and an example classroom:
+    They have already defined the objects for you. 
+    
+    A student has an id, a name, and an array of grades.
+
+    An assignment has an id, a name, and the number of points that it is worth.
+
+    A classroom has a name, a teacher, an array of students, and an array of assignments
+    
+    Here is an example classroom:
 */
-
-function createAssignment(name, numPoints) {
-    let assignment = {
-        name: name,
-        numPoints: numPoints
-    }
-    return assignment;
-}
-
-function createTeacher(name) {
-    let teacher = {
-        name: name
-    };
-    return teacher;
-}
-
-function createStudent(name) {
-    let student = {
-        name: name,
-        grades: []
-    };
-    return student;
-}
-
-function createClassRoom(name, teacher, students) {
-    let classRoom = {
-        name: name,
-        teacher: teacher,
-        students: students,
-        assignments: []
-    };
-    return classRoom;
-}
 
 let classroom = {
     name: "Intro to JavaScript",
@@ -71,27 +45,29 @@ let classroom = {
     ],
     assignments: [
         {
-            id: 1,
+            id: 101,
             name: "Intro",
             numPoints: 5,
         },
         {
-            id: 2,
+            id: 102,
             name: "Lesson 1",
             numPoints: 10,
         },
         {
-            id: 3,
+            id: 103,
             name: "Lesson 2",
             numPoints: 10,
         },
         {
-            id: 4,
+            id: 104,
             name: "Final",
             numPoints: 30,
         }
     ]
 };
+
+
 
 /*
     ----------------- API Functions ---------------------------------------
@@ -99,7 +75,7 @@ let classroom = {
     Your job is to finish the functions below. 
     The function should match the information in the comment above it.
 
-    A lot of these functions do the same things! 
+    A lot of these functions do similar things! 
     You should try to avoid having as much duplicate code as possible.
 
     The way to avoid duplicating code is by creating subroutines.  
@@ -107,30 +83,38 @@ let classroom = {
 
     There are a few there to get you started.
 */
+
+
+/*
+    A note on Ids
+
+    Putting an id on an object is extremely common in programming.
+    Most database automatically generate ids when you put an object into them.
+
+    But ids are a very important way to identify an object. If I want to get information 
+    on a student, I should use their student Id.  Because maybe they changed their name!
+    Or maybe there are two students with the same name.  
+    Using an Id, there are never two students with the same student id. 
+    
+    In this exercise most of the functions use a studentId or an assignmentId.
+    Below you make a function which can retrieve a student object given their studentId.
+    You will want to make a similar function to getAssignmentById and put it into your 
+    helper functions.
+*/
+
 /**
  * getStudentById
  * @param {object} classroom - the classroom object 
  * @param {string} studentId - the id string of a student
  * @returns {object}
- * This should return the object for the studen with the given studentId
+ * This should return the object for the student with the given studentId
  * 
  * If the student is not found, then return null.
  */
 function getStudentById(classroom, studentId) {
     // Your Code Here!
-}
-
-/**
- * calculateAllGrades
- * @param {object} classroom - the classroom object
- * 
- * This should calculate grade for every student for every assignment.
- 
- * If a student already has a grade for an assignment, you should not 
- * calculate them a new one.
- */
-function calculateAllGrades(classroom) {
-    // Your Code Here!
+    // Look through the students list and find a student where their id matches the studentId
+    // return that object.
 }
 
 /**
@@ -141,6 +125,9 @@ function calculateAllGrades(classroom) {
  * This should calculate the grades for every student for the given
  * assignmentId.
  * 
+ * Calculate a students grade by calling the helper function calculateAssignmentGradeForStudent
+ * with the student object and the assignment object.
+ * 
  * If a student already has a grade for an assignment, you should not 
  * calculate them a new one.
  * 
@@ -150,9 +137,39 @@ function calculateAllGrades(classroom) {
  * 
  * For example, the assignment "Lesson 1" is at index 1.
  * So every student should have their grade for "Lesson 1" in index 1 of their grades array.
+ * 
+ * Hint: It would be useful to make a function 
  */
 function calculateGradesForAssignmentId(classroom, assignmentId) {
     // Your Code Here!
+    // First find the assignment with the given id, 
+    // then for every student grade that assignment using calculateAssignmentGradeForStudent
+    // then assign them their grade in the correct index of their grades array.
+}
+
+/**
+ * calculateAllGrades
+ * @param {object} classroom - the classroom object
+ * 
+ * This should calculate a grade for every student for every assignment.
+ * 
+ * If a student already has a grade for an assignment, you should not 
+ * calculate them a new one.
+ * 
+ * calculate a student's grade by calling the helper function calculateAssignmentGradeForStudent
+ * with the student object and the assignment object.
+ * 
+ * This will return a number, which is the students grade.
+ * 
+ * Add that grade into the correct index in the student's grades array.
+ * The index of the grade should match the index of the assignment in the assignments array.
+ * 
+ * 
+ */
+function calculateAllGrades(classroom) {
+    // Your Code Here!
+    // Go through every assignment in the assignments list, grade each assignment.
+    // Hint: This can call the calculateGradesForAssignmentId() function!
 }
 
 /**
@@ -163,12 +180,42 @@ function calculateGradesForAssignmentId(classroom, assignmentId) {
  * This should return the list of all students who failed the 
  * assignment with the given id.
  * 
- * Hint: You can find if a student is failing if their grade is less
- * than getFailingGradeThreshold(numPoints)
+ * You know a student failed an assignment their grade is less
+ * than 60% of the possible points for that assignment.
+ * 
+ * There is a helper function already there to help with that!
+ * isFailingGrade(studentsGrade, numPointsInAssignment)
+ * Given the student's grade and the number of points available in an assignment, 
+ * this will return true if it is a failing grade.
+ *
+ * For example, if you have an assignment 
+ * let assignments = [
+ *     {
+ *         id: 102,
+ *         name: "Lesson 1",
+ *         numPoints: 10,
+ *     }
+ * ];
+ * 
+ * And the student
+ * let student = {
+ *     id: 11211,
+ *     name: "Joe",
+ *     grades: [5]
+ * }
+ * isFailingGrade(assignments[0].numPoints, student.grades[0]);
+ * This would return true, because the student got a 5 on the 10 point assignment.
+ * 
  */
 function getListOfStudentsWhoFailedAssignmentId(classroom, assignmentId) {
+    let listOfStudents = [];
     // Your Code Here!
-    return [];
+    // Find the index of the assignment with the given id.
+    // For each student,
+    //  if they have a failing grade, 
+    //  then add their student object onto the list of students.
+
+    return listOfStudents;
 }
 
 /**
@@ -177,14 +224,22 @@ function getListOfStudentsWhoFailedAssignmentId(classroom, assignmentId) {
  * @returns {object[]} 
  * This should return the list of all students who have a failing overall grade in the class.
  * To calculate a students overall grade, first add up all of their grades. 
- * Then add up the total points available for every assignment call getFailingGradeThreshold
- * with it.
+ * Then add up the total points available for every assignment
+ * Then you can call isFailingGrade(studentsOverallGrade, totalAvailablePoints) 
+ * to find out if they are failing.
  * 
- * If the students total grade is less than the failingGradeThreshold then they are failing.
+ * This should be very similar to the getListOfStudentsWhoFailedAssignmentId() function!
  */
 function getListOfStudentsWhoAreFailing(classroom) {
+    let listOfFailingStudents = [];
     // Your Code Here!
-    return [];
+    // Add up the total number of points for the assignments.
+    // For each student
+    //   add up all of their grades.
+    //   if they have a failing grade
+    //     then add them to the listOfFailingStudents
+    // 
+    return listOfFailingStudents;
 }
 
 /**
@@ -199,10 +254,11 @@ function getListOfStudentsWhoAreFailing(classroom) {
  * 
  * If the assignment is already in the assignments array, it should not be
  * added twice!  Every assignment should only appear once. 
- * 
  */
 function teachAssignment(classroom, assignment) {
     // Your Code Here!
+    // Check if the assignment is already in the assignment list, 
+    // if it is not, then add it
 }
 
 /**
@@ -220,6 +276,7 @@ function teachAssignment(classroom, assignment) {
  */
 function teachAndGradeAssignment(classroom, assignment) {
     // Your Code Here!
+    // Hint: You can call teachAssignment() and calculateGradesForAssignmentId() 
 }
 
 /**
@@ -231,13 +288,17 @@ function teachAndGradeAssignment(classroom, assignment) {
  * This should return the average grade that students received for the 
  * given assignmentId.
  * 
- * The average grade can be computer by the following formula
+ * The average grade can be computed by the following formula
  * 
  * averageGrade = (sum of all grades received by students for the assignment) / number of students
  */
 function findAverageGradeForAssignmentId(classroom, assignmentId) {
+    let averageGrade;
     // Your Code Here!
-    return -1;
+    // Find the assignment index for the given assignmentId
+    // Add up the grade of every student using the assignment index
+    // divide by the number of students to get the average grade
+    return averageGrade;
 }
 
 /**
@@ -259,10 +320,22 @@ function findAverageGradeForAssignmentId(classroom, assignmentId) {
  * ]
  * 
  * To compute the final grade, use the getFinalLetterGrade function.
+ * To use it, you will need the total number of points available, and the total
+ * number of points a student has earned
+ * let letterGrade = getFinalLetterGrade(sumOfStudentsPoints, totalAvailablePoints);
+ * 
  */
 function getFinalGrades(classroom) {
+    let listOfGrades = [];
     // Your Code Here!
-    return [];
+    // First, find the total available points by adding up the points of every assignment
+    // Then for each student
+    //    Add up the points from their grades.
+    //    Calculate their letter grade using getFinalLetterGrade
+    //    create a new object for the students final grade,
+    //       it should include the id, their name, and their finalGrade
+    //       add that object onto the list of grades.  
+    return listOfGrades;
 }
 
 /*  -------- Helper Functions ---------------------------------------
@@ -275,7 +348,7 @@ function getFinalGrades(classroom) {
     You should add at least a few subroutines!  If you do not, you will 
     lose points.
 
-    Hint: In the rubric, there are 7 subroutines.  You can have more or 
+    Hint: In the grading rubric, there are 7 new subroutines.  You can have more or 
     less than that, but there are a lot of options on how to optimize your code!
 
     The more subroutines you write, the less overall code you will end up
@@ -285,9 +358,6 @@ function getFinalGrades(classroom) {
     those are just there to help you understand what they are doing.
 
 */
-
-// A failing grade is less than 60 %
-const FAILING_GRADE_PERCENTAGE = 0.6;
 
 
 /**
@@ -308,20 +378,24 @@ function calculateAssignmentGradeForStudent(student, assignment) {
     return grade;
 }
 
+
+// A failing grade is less than 60 %
+const FAILING_GRADE_PERCENTAGE = 0.6;
 /**
- * getFailingGradeThreshold
+ * isFailingGrade
+ * @param {number} grade - the grade received by the student
  * @param {number} numPointsAvailable - The number of points available for the grade.
  * 
- * This calculates the grade which is the failing threshold.
+ * This decides whether the given grade is passing or failing.
  * 
  * The FAILING_GRADE_PERCENTAGE is 60%, so 60% * the number of points availabe 
  * gives the lowest non-failing grade.
  * 
- * A grade is failing if it is less than the failingGradeThreshold returned from this
- * function.
+ * A grade is failing if it is less than the failingGradeThreshold 
  */
-function getFailingGradeThreshold(numPointsAvailable) {
-    return numPointsAvailable * FAILING_GRADE_PERCENTAGE;
+function isFailingGrade(grade, numPointsAvailable) {
+    let failingGradeThreshold = numPointsAvailable * FAILING_GRADE_PERCENTAGE;
+    return grade < failingGradeThreshold;
 }
 
 /**
@@ -347,8 +421,11 @@ function getFinalLetterGrade(sumOfPoints, totalAvailablePoints) {
     }
 }
 
-// Add your subroutines here!
+// Add your helper functions here!
 
+function doSomething(parameter1, parameter2) {
+    // Create your own function!
+}
 
 /* 
    -------TESTS---------------------------------------------------------------
@@ -490,7 +567,7 @@ function getFinalLetterGrade(sumOfPoints, totalAvailablePoints) {
     {
         console.log("* Can add new assignment");
         let testClassroom = getTestClassroom();
-        let assignment = createAssignment("test", 5);
+        let assignment = createAssignment("5", "test", 5);
         teachAssignment(testClassroom, assignment);
 
         console.log(testClassroom.assignments.includes(assignment));
@@ -510,7 +587,7 @@ function getFinalLetterGrade(sumOfPoints, totalAvailablePoints) {
     {
         console.log("* Can add new assignment");
         let testClassroom = getTestClassroom();
-        let assignment = createAssignment("test", 5);
+        let assignment = createAssignment("5", "test", 5);
         teachAndGradeAssignment(testClassroom, assignment);
         let assignmentIndex = testClassroom.assignments.indexOf(assignment);
 
@@ -659,6 +736,42 @@ function getFinalLetterGrade(sumOfPoints, totalAvailablePoints) {
             ]
         };
     }
+
+    function createAssignment(id, name, numPoints) {
+        let assignment = {
+            id: id,
+            name: name,
+            numPoints: numPoints
+        }
+        return assignment;
+    }
+
+    function createTeacher(name) {
+        let teacher = {
+            name: name
+        };
+        return teacher;
+    }
+
+    function createStudent(id, name) {
+        let student = {
+            id: id,
+            name: name,
+            grades: []
+        };
+        return student;
+    }
+
+    function createClassRoom(name, teacher, students) {
+        let classRoom = {
+            name: name,
+            teacher: teacher,
+            students: students,
+            assignments: []
+        };
+        return classRoom;
+    }
+
 }
 
 
